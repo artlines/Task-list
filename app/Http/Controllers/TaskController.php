@@ -19,12 +19,8 @@ class TaskController extends Controller
    */
   public function getTasks($allFields = false): array
   {
-    if (Cache::has(self::TASKS_CACHE_FIELD)) {
-      $tasks = Cache::get(self::TASKS_CACHE_FIELD);
-    }else{
-      $tasks = $this->generateTasks();
-    }
-
+    $tasks = $this->getRawTasks();
+    
     if ($allFields === false) {
       foreach ($tasks as $key => $task) {
         $tasks[$key] = array_intersect_key($task, $this->fieldsToShow);
@@ -39,6 +35,15 @@ class TaskController extends Controller
     $tasks = $this->getTasks(true);
 
     return $tasks[$id];
+  }
+
+  public function getRawTasks()
+  {
+    if (Cache::has(self::TASKS_CACHE_FIELD)) {
+      return Cache::get(self::TASKS_CACHE_FIELD);
+    }
+
+    return $this->generateTasks();
   }
 
   public function renderTasks(Request $request)
