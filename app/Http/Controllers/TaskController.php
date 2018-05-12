@@ -77,12 +77,8 @@ class TaskController extends Controller
   {
     $taskId = $request->taskId;
     $taskInfo = $this->getTaskById($request, $taskId);
-    $response = view('taskOne', [
-      'task' => $taskInfo
-    ])->render();
 
-
-    return ['success' => true, 'data' => $response];
+    return ['success' => true, 'data' => $taskInfo];
   }
 
   private function generateTasks()
