@@ -8,20 +8,20 @@ use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 class TaskController extends Controller
 {
-  const TASK_QUANTITY = 1001;
+  const TASK_QUANTITY = 1000;
+  const TASK_PAGE_QUANTITY = 10;
   const TASKS_CACHE_FIELD = 'tasks';
   const CACHE_EXPIRE_TIME = 60;
-  private $fieldsToShow = ['id' => '', 'title' => '', 'date' => ''];
 
   public function __invoke(Request $request)
   {
 
     $page = $request->get('page', 1);
-    $perPage = 10;
+    $perPage = self::TASK_PAGE_QUANTITY;
     $tasks = $this->getTasks();
     $offset = ($page - 1) * $perPage;
     $items =  new Paginator(
-      array_slice($tasks, $offset, 10), 
+      array_slice($tasks, $offset, self::TASK_PAGE_QUANTITY), 
       count($tasks), 
       $perPage, 
       $page,
@@ -29,40 +29,27 @@ class TaskController extends Controller
     );
 
     return view('task', [
-        'items' => $items
+      'items' => $items
     ]);
   }
 
-  /**
-   * Return an array of the tasks.
-   *
-   * @return array
-   */
-  public function getTasks($allFields = false): array
+  public function getTasks($allFields = false, $id = 0): array
   {
+    $fieldsToShow = ['id' => '', 'title' => '', 'date' => ''];
     $tasks = $this->getRawTasks();
 
     if ($allFields === false) {
       foreach ($tasks as $key => $task) {
-        $tasks[$key] = array_intersect_key($task, $this->fieldsToShow);
+        $tasks[$key] = array_intersect_key($task, $fieldsToShow);
       }
     }
 
-    return $tasks;
+    return $id > 0 ? $tasks[$id] : $tasks;
   }
 
   public function getTaskById(Request $request, $id): array
   {
-    $tasks = $this->getTasks(true);
-
-    return $tasks[$id];
-  }
-
-  public function searchTasks(Request $request): array
-  {
-    $tasks = $this->getTasks(true);
-
-    return $tasks;
+    return $this->getTasks(true, $id);
   }
 
   public function getRawTasks()
@@ -74,7 +61,7 @@ class TaskController extends Controller
     return $this->generateTasks();
   }
 
-  public function renderTaskOne(Request $request)
+  public function renderTaskOne(Request $request): array
   {
     $taskId = $request->taskId;
     $taskInfo = $this->getTaskById($request, $taskId);
@@ -82,10 +69,47 @@ class TaskController extends Controller
     return ['success' => true, 'data' => $taskInfo];
   }
 
+  public function searchTask(Request $request): array
+  {
+    //@todo не слетающая пагинация у результатов поиска, в бэльюхе такое было
+    //при пустом результате отображаются все записи
+    //сделать вьюху универсальной или разделить их
+    //а может быть в пагинацию можно передать строку поиска?
+    //и проверить что найденные задачи жмякаются
+    //и подрефакторить этот метод
+    
+    $str = $request->str;
+    $page = $request->get('page', 1);
+    $perPage = self::TASK_PAGE_QUANTITY;
+    $tasks = $this->getTasks();
+    $offset = ($page - 1) * $perPage;
+    $result = [];
+
+    foreach ($tasks as $key => $task) {
+      if (substr_count($task['title'], $str) > 0) {
+        $result[$key] = $task;
+      }
+    }
+    $items =  new Paginator(
+      array_slice($result, $offset, self::TASK_PAGE_QUANTITY), 
+      count($result), 
+      $perPage, 
+      $page,
+      ['class' => 'justify-content-center']
+    );
+
+    $data = view('task', [
+      'items' => $items,
+      'str' => $str
+    ])->render();
+
+    return ['success' => true, 'data' => $data];
+  }
+
   private function generateTasks()
   {
     $tasks = [];
-    for ($i=1; $i < self::TASK_QUANTITY; $i++) { 
+    for ($i=0; $i++ < self::TASK_QUANTITY;) { 
       $tasks[$i] = [
         'id' => $i,
         'title' => 'Task '. $i,

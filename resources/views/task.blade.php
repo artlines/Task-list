@@ -9,7 +9,14 @@
     <link href="/css/app.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <div class="container">
+    <div class="container" id="main">
+      <div class="row justify-content-md-center mt-3 mb-4">
+        <div class="col-md-4 col-xs-12">
+          <div class="form-group">
+            <input type="text" class="form-control" id="searchTask" placeholder="Поиск" value="{{$str ?? ''}}">
+          </div>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-12">
           <table class="table table-hover">

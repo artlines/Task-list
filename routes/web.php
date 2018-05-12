@@ -15,3 +15,4 @@ Route::get('/', 'TaskController');
 Route::get('/api/v1/task', 'TaskController@getTasks');
 Route::get('/api/v1/task/{id}', 'TaskController@getTaskById');
 Route::post('/getTaskOne', 'TaskController@renderTaskOne');
+Route::post('/searchTask', 'TaskController@searchTask');
