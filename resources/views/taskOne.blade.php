@@ -21,7 +21,7 @@
             </thead>
             <tbody>
               @foreach ($items as $item)
-                  <tr>
+                  <tr data-id="{{$item['id']}}" class="task_item">
                     <th scope="row">{{$item['id']}}</th>
                     <td>{{$item['title']}}</td>
                     <td>{{$item['date']}}</td>

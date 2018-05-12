@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 class TaskController extends Controller
 {
@@ -11,6 +12,25 @@ class TaskController extends Controller
   const TASKS_CACHE_FIELD = 'tasks';
   const CACHE_EXPIRE_TIME = 60;
   private $fieldsToShow = ['id' => '', 'title' => '', 'date' => ''];
+
+  public function __invoke(Request $request)
+  {
+
+    $page = $request->get('page', 1);
+    $perPage = 10;
+    $tasks = $this->getTasks();
+    $offset = ($page - 1) * $perPage;
+    $items =  new Paginator(
+      array_slice($tasks, $offset, 10), 
+      count($tasks), 
+      $perPage, 
+      $page
+    );
+
+    return view('task', [
+        'items' => $items
+    ]);
+  }
 
   /**
    * Return an array of the tasks.
@@ -20,7 +40,7 @@ class TaskController extends Controller
   public function getTasks($allFields = false): array
   {
     $tasks = $this->getRawTasks();
-    
+
     if ($allFields === false) {
       foreach ($tasks as $key => $task) {
         $tasks[$key] = array_intersect_key($task, $this->fieldsToShow);
@@ -30,11 +50,18 @@ class TaskController extends Controller
     return $tasks;
   }
 
-  public function getTaskById(Request $request, $id)
+  public function getTaskById(Request $request, $id): array
   {
     $tasks = $this->getTasks(true);
 
     return $tasks[$id];
+  }
+
+  public function searchTasks(Request $request): array
+  {
+    $tasks = $this->getTasks(true);
+
+    return $tasks;
   }
 
   public function getRawTasks()
@@ -46,17 +73,10 @@ class TaskController extends Controller
     return $this->generateTasks();
   }
 
-  public function renderTasks(Request $request)
-  {
-    return view('task');
-  }
-
   public function renderTaskOne(Request $request)
   {
-    return view('task');
+    return view('weclome');
   }
-
-
 
   private function generateTasks()
   {

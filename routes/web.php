@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/', 'TaskController@renderTasks');
+Route::get('/', 'TaskController');
 Route::get('/api/v1/task', 'TaskController@getTasks');
 Route::get('/api/v1/task/{id}', 'TaskController@getTaskById');
