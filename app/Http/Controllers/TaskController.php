@@ -24,7 +24,8 @@ class TaskController extends Controller
       array_slice($tasks, $offset, 10), 
       count($tasks), 
       $perPage, 
-      $page
+      $page,
+      ['class' => 'justify-content-center']
     );
 
     return view('task', [
