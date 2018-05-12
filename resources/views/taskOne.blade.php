@@ -1,42 +1,22 @@
-<!doctype html>
-<html lang="{{ app()->getLocale() }}">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tasks</title>
-    <link href="/css/app.css" rel="stylesheet" type="text/css">
-  </head>
-  <body>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col">Номер задачи</th>
-                <th scope="col">Заголовок</th>
-                <th scope="col">Дата выполнения</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach ($items as $item)
-                  <tr data-id="{{$item['id']}}" class="task_item">
-                    <th scope="row">{{$item['id']}}</th>
-                    <td>{{$item['title']}}</td>
-                    <td>{{$item['date']}}</td>
-                  </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
+<div class="modal" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalTitle">Task № {{$task['id']}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-          {{ $items->links() }}
-        </div>
+      <div class="modal-body">
+        @foreach ($task as $key => $field)
+          <p>
+            <strong>{{$key}}: </strong> {{$field}}
+          </p>
+        @endforeach
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
-    </div>
-  </body>
-</html>
+  </div>
+</div>

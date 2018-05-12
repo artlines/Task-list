@@ -10411,3 +10411,7 @@ a.text-dark:focus {
   }
 }
 
+.task_item:hover {
+  cursor: pointer;
+}
+

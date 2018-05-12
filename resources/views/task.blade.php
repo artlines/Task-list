@@ -2,6 +2,7 @@
 <html lang="{{ app()->getLocale() }}">
   <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tasks</title>
@@ -21,11 +22,11 @@
             </thead>
             <tbody>
               @foreach ($items as $item)
-                  <tr>
-                    <th scope="row">{{$item['id']}}</th>
-                    <td>{{$item['title']}}</td>
-                    <td>{{$item['date']}}</td>
-                  </tr>
+                <tr data-id="{{$item['id']}}" class="task_item">
+                  <th scope="row">{{$item['id']}}</th>
+                  <td>{{$item['title']}}</td>
+                  <td>{{$item['date']}}</td>
+                </tr>
               @endforeach
             </tbody>
           </table>
@@ -37,6 +38,7 @@
         </div>
       </div>
     </div>
-    </div>
+    <div id="taskOne"></div>
+    <script src="/js/app.js"></script>
   </body>
 </html>
