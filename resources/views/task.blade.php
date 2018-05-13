@@ -9,7 +9,7 @@
     <link href="/css/app.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <div class="container" id="main">
+    <div class="container">
       <div class="row justify-content-md-center mt-3 mb-4">
         <div class="col-md-4 col-xs-12">
           <div class="form-group">
@@ -17,31 +17,33 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col">Номер задачи</th>
-                <th scope="col">Заголовок</th>
-                <th scope="col">Дата выполнения</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach ($items as $item)
-                <tr data-id="{{$item['id']}}" class="task_item">
-                  <th scope="row">{{$item['id']}}</th>
-                  <td>{{$item['title']}}</td>
-                  <td>{{$item['date']}}</td>
+      <div id="list">
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Номер задачи</th>
+                  <th scope="col">Заголовок</th>
+                  <th scope="col">Дата выполнения</th>
                 </tr>
-              @endforeach
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                @foreach ($items as $item)
+                  <tr data-id="{{$item['id']}}" class="task_item">
+                    <th scope="row">{{$item['id']}}</th>
+                    <td>{{$item['title']}}</td>
+                    <td>{{$item['date']}}</td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          {{ $items->links() }}
+        <div class="row">
+          <div class="col-md-12">
+            {{ $items->links() }}
+          </div>
         </div>
       </div>
     </div>

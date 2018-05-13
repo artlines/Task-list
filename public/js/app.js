@@ -11164,69 +11164,30 @@ module.exports = __webpack_require__(36);
 
 // window.Popper = require('popper.js').default;
 __webpack_require__(11);
+__webpack_require__(41);
 
 // window.Vue = require('vue');
 
-var taskId = void 0;
 var str = void 0;
-var localValue = void 0;
 
 $(function () {
-
-	//получить подробности задачи
-	$('.task_item').click(function () {
-
-		taskId = $(this).data('id');
-		localValue = localStorage[taskId];
-
-		if (typeof localValue == "undefined") {
-			$.ajax({
-				type: "POST",
-				dataType: 'json',
-				url: '/getTaskOne',
-				data: { taskId: taskId },
-				beforeSend: function beforeSend(xhr, type) {
-					xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-				},
-				success: function success(response) {
-					localStorage[response.data['id']] = JSON.stringify(response.data);
-					renderTask(response.data);
-				}
-			});
-		} else {
-			localValue = JSON.parse(localValue);
-			renderTask(localValue);
-		}
-	});
-
 	//поиск по задачам
 	$('#searchTask').keyup(function () {
 		str = $(this).val();
-		if (str.length > 5) {
-			$.ajax({
-				type: "POST",
-				dataType: 'json',
-				url: '/searchTask',
-				data: { str: str },
-				beforeSend: function beforeSend(xhr, type) {
-					xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-				},
-				success: function success(response) {
-					$('#main').html(response.data);
-				}
-			});
-		}
+		$.ajax({
+			type: "POST",
+			dataType: 'json',
+			url: '/searchTask',
+			data: { str: str },
+			beforeSend: function beforeSend(xhr, type) {
+				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+			},
+			success: function success(response) {
+				$('#list').html(response.data);
+			}
+		});
 	});
 });
-
-function renderTask(data) {
-	$('.modal-body').empty();
-	$('#taskModalTitle').text('Task № ' + data['id']);
-	$.each(data, function (key, value) {
-		$('.modal-body').append('<p><strong>' + key + '</strong>: ' + value + '</p>');
-	});
-	$('#taskModal').modal('show');
-}
 
 /***/ }),
 /* 11 */
@@ -35973,6 +35934,55 @@ module.exports = function spread(callback) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 37 */,
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */
+/***/ (function(module, exports) {
+
+var taskId = void 0;
+var localValue = void 0;
+
+$(function () {
+
+	//получить подробности задачи
+	$('.task_item').click(function () {
+
+		taskId = $(this).data('id');
+		localValue = localStorage[taskId];
+
+		if (typeof localValue == "undefined") {
+			$.ajax({
+				type: "POST",
+				dataType: 'json',
+				url: '/getTaskOne',
+				data: { taskId: taskId },
+				beforeSend: function beforeSend(xhr, type) {
+					xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+				},
+				success: function success(response) {
+					localStorage[response.data['id']] = JSON.stringify(response.data);
+					renderTask(response.data);
+				}
+			});
+		} else {
+			localValue = JSON.parse(localValue);
+			renderTask(localValue);
+		}
+	});
+});
+
+function renderTask(data) {
+	$('.modal-body').empty();
+	$('#taskModalTitle').text('Task № ' + data['id']);
+	$.each(data, function (key, value) {
+		$('.modal-body').append('<p><strong>' + key + '</strong>: ' + value + '</p>');
+	});
+	$('#taskModal').modal('show');
+}
 
 /***/ })
 /******/ ]);

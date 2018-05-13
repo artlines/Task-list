@@ -71,36 +71,21 @@ class TaskController extends Controller
 
   public function searchTask(Request $request): array
   {
-    //@todo не слетающая пагинация у результатов поиска, в бэльюхе такое было
-    //при пустом результате отображаются все записи
-    //сделать вьюху универсальной или разделить их
-    //да, нужно разделить вьюхи; используй мощь блэйда
-    //а может быть в пагинацию можно передать строку поиска?
-    //и проверить что найденные задачи жмякаются
-    //и подрефакторить этот метод
-    
-    $str = $request->str;
-    $page = $request->get('page', 1);
-    $perPage = self::TASK_PAGE_QUANTITY;
+    $str = strtolower($request->str);
     $tasks = $this->getTasks();
-    $offset = ($page - 1) * $perPage;
-    $result = [];
 
-    foreach ($tasks as $key => $task) {
-      if (substr_count($task['title'], $str) > 0) {
-        $result[$key] = $task;
+    if (!empty($str)) {
+      foreach ($tasks as $key => $task) {
+        if (substr_count(strtolower($task['title']), $str) > 0) {
+          $result[$key] = $task;
+        }
       }
+    }else{
+      $result = $tasks;
     }
-    $items =  new Paginator(
-      array_slice($result, $offset, self::TASK_PAGE_QUANTITY), 
-      count($result), 
-      $perPage, 
-      $page,
-      ['class' => 'justify-content-center']
-    );
 
-    $data = view('task', [
-      'items' => $items,
+    $data = view('taskSearch', [
+      'items' => $result,
       'str' => $str
     ])->render();
 
