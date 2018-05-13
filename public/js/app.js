@@ -11163,10 +11163,10 @@ module.exports = __webpack_require__(36);
  */
 
 // window.Popper = require('popper.js').default;
+// window.Vue = require('vue');
+
 __webpack_require__(11);
 __webpack_require__(41);
-
-// window.Vue = require('vue');
 
 var str = void 0;
 

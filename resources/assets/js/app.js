@@ -6,10 +6,10 @@
  */
 
 // window.Popper = require('popper.js').default;
+// window.Vue = require('vue');
+
 require('./bootstrap');
 require('./taskItem');
-
-// window.Vue = require('vue');
 
 let str;
 

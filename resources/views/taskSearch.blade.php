@@ -59,6 +59,5 @@ function renderTask(data){
   $('#taskModal').modal('show');
 } 
 
-
 </script>
    
