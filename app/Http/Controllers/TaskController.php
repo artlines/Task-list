@@ -18,8 +18,8 @@ class TaskController extends Controller
 
     $page = $request->get('page', 1);
     $perPage = self::TASK_PAGE_QUANTITY;
-    $tasks = $this->getTasks();
     $offset = ($page - 1) * $perPage;
+    $tasks = $this->getTasks();
     $items =  new Paginator(
       array_slice($tasks, $offset, self::TASK_PAGE_QUANTITY), 
       count($tasks), 
@@ -81,7 +81,13 @@ class TaskController extends Controller
         }
       }
     }else{
-      $result = $tasks;
+      $result = new Paginator(
+      array_slice($tasks, $offset, self::TASK_PAGE_QUANTITY), 
+      count($tasks), 
+      $perPage, 
+      $page,
+      ['class' => 'justify-content-center']
+    );;
     }
 
     $data = view('taskSearch', [

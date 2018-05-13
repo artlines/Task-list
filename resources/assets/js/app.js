@@ -17,17 +17,19 @@ $(function(){
 	//поиск по задачам
 	$('#searchTask').keyup(function(){
 		str = $(this).val();
-		$.ajax({
-	    type: "POST",
-	    dataType : 'json',
-	    url: '/searchTask',
-	    data: {str: str},
-	    beforeSend: function(xhr, type) {
-	      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-	  	},
-	    success: function(response) {
-				$('#list').html(response.data);
-			}
-		});
+		setTimeout(function(){
+			$.ajax({
+		    type: "POST",
+		    dataType : 'json',
+		    url: '/searchTask',
+		    data: {str: str},
+		    beforeSend: function(xhr, type) {
+		      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+		  	},
+		    success: function(response) {
+					$('#list').html(response.data);
+				}
+			});
+		}, 500)
 	});
 });
