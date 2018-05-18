@@ -11156,15 +11156,8 @@ module.exports = __webpack_require__(37);
 /***/ (function(module, exports, __webpack_require__) {
 
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
 // window.Popper = require('popper.js').default;
 window.Vue = __webpack_require__(42);
-
 __webpack_require__(11);
 var lib = __webpack_require__(45);
 var taskId = void 0;
@@ -11172,58 +11165,58 @@ var localValue = void 0;
 var debounce = lib.debounce;
 
 $(function () {
-  //получить подробности задачи
-  $('.task_item').click(function () {
-    taskId = $(this).data('id');
-    localValue = localStorage[taskId];
-    lib.taskItem(taskId, localValue);
-  });
+	//получить подробности задачи
+	$('.task_item').click(function () {
+		taskId = $(this).data('id');
+		localValue = localStorage[taskId];
+		lib.taskItem(taskId, localValue);
+	});
 });
 
 Vue.directive('debounce', function (el, binding) {
-  if (binding.value !== binding.oldValue) {
-    // window.debounce is our global function what we defined at the very top!
-    el.oninput = debounce(function (ev) {
-      el.dispatchEvent(new Event('change'));
-    }, parseInt(binding.value) || 300);
-  }
+	if (binding.value !== binding.oldValue) {
+		// window.debounce is our global function what we defined at the very top!
+		el.oninput = debounce(function (ev) {
+			el.dispatchEvent(new Event('change'));
+		}, parseInt(binding.value) || 300);
+	}
 });
 
 //поиск
 new Vue({
-  el: '#app',
+	el: '#app',
 
-  data: function data() {
-    return {
-      keywords: null,
-      results: []
-    };
-  },
+	data: function data() {
+		return {
+			keywords: null,
+			results: []
+		};
+	},
 
 
-  watch: {
-    keywords: function keywords(after, before) {
-      this.fetch();
-    }
-  },
+	watch: {
+		keywords: function keywords(after, before) {
+			this.fetch();
+		}
+	},
 
-  methods: {
-    fetch: function fetch() {
-      var _this = this;
+	methods: {
+		fetch: function fetch() {
+			var _this = this;
 
-      axios.post('/searchTask', { _token: $('meta[name="csrf-token"]').attr('content'), str: this.keywords }).then(function (response) {
-        return _this.results = response.data.data;
-      }).catch(function (error) {});
-    },
-    highlight: function highlight(text) {
-      return text.replace(new RegExp(this.keywords, 'gi'), '<span class="highlighted">$&</span>');
-    },
-    taskItem: function taskItem(id) {
-      taskId = id;
-      localValue = localStorage[taskId];
-      lib.taskItem(taskId, localValue);
-    }
-  }
+			axios.post('/searchTask', { _token: $('meta[name="csrf-token"]').attr('content'), str: this.keywords }).then(function (response) {
+				return _this.results = response.data.data;
+			}).catch(function (error) {});
+		},
+		highlight: function highlight(text) {
+			return text.replace(new RegExp(this.keywords, 'gi'), '<span class="highlighted">$&</span>');
+		},
+		taskItem: function taskItem(id) {
+			taskId = id;
+			localValue = localStorage[taskId];
+			lib.taskItem(taskId, localValue);
+		}
+	}
 });
 
 /***/ }),
