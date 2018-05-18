@@ -1,23 +1,33 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Example Component</div>
-
-                    <div class="panel-body">
-                        I'm an example component!
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div>
+        <input type="text" v-model="keywords">
+        <ul v-if="results.length > 0">
+            <li v-for="result in results" :key="result.id" v-text="result.name"></li>
+        </ul>
     </div>
 </template>
 
 <script>
-    export default {
-        mounted() {
-            console.log('Component mounted.')
+export default {
+    data() {
+        return {
+            keywords: null,
+            results: []
+        };
+    },
+
+    watch: {
+        keywords(after, before) {
+            this.fetch();
+        }
+    },
+
+    methods: {
+        fetch() {
+            axios.get('/searchTask', {str: str})
+                .then(response => this.results = reponse.data)
+                .catch(error => {});
         }
     }
+}
 </script>

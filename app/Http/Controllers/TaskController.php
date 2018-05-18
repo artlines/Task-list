@@ -73,23 +73,19 @@ class TaskController extends Controller
   {
     $str = strtolower($request->str);
     $tasks = $this->getTasks();
+    $result = [];
 
     if (!empty($str)) {
       foreach ($tasks as $key => $task) {
         if (substr_count(strtolower($task['title']), $str) > 0) {
-          $result[$key] = $task;
+          $result[] = $task;
         }
       }
     }else{
       $result = $tasks;
     }
 
-    $data = view('taskSearch', [
-      'items' => $result,
-      'str' => $str
-    ])->render();
-
-    return ['success' => true, 'data' => $data];
+    return ['success' => true, 'data' => $result];
   }
 
   private function generateTasks()

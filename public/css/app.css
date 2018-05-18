@@ -10415,3 +10415,7 @@ a.text-dark:focus {
   cursor: pointer;
 }
 
+.highlighted {
+  font-weight: bold;
+}
+

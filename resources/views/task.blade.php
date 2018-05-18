@@ -12,8 +12,11 @@
     <div class="container">
       <div class="row justify-content-md-center mt-3 mb-4">
         <div class="col-md-4 col-xs-12">
-          <div class="form-group">
-            <input type="text" class="form-control" id="searchTask" placeholder="Поиск" value="{{$str ?? ''}}">
+          <div class="form-group" id="app">
+            <input type="text" v-model.lazy="keywords" v-debounce="500" placeholder="Поиск..." class="form-control">
+            <ul v-if="results.length > 0">
+              <li v-for="result in results" :key="result.id" v-html="highlight(result.title)"></li>
+            </ul>
           </div>
         </div>
       </div>
