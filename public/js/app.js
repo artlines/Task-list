@@ -11166,7 +11166,19 @@ module.exports = __webpack_require__(37);
 window.Vue = __webpack_require__(42);
 
 __webpack_require__(11);
-__webpack_require__(36);
+var lib = __webpack_require__(45);
+var taskId = void 0;
+var localValue = void 0;
+var debounce = lib.debounce;
+
+$(function () {
+  //получить подробности задачи
+  $('.task_item').click(function () {
+    taskId = $(this).data('id');
+    localValue = localStorage[taskId];
+    lib.taskItem(taskId, localValue);
+  });
+});
 
 Vue.directive('debounce', function (el, binding) {
   if (binding.value !== binding.oldValue) {
@@ -11205,26 +11217,14 @@ new Vue({
     },
     highlight: function highlight(text) {
       return text.replace(new RegExp(this.keywords, 'gi'), '<span class="highlighted">$&</span>');
+    },
+    taskItem: function taskItem(id) {
+      taskId = id;
+      localValue = localStorage[taskId];
+      lib.taskItem(taskId, localValue);
     }
   }
 });
-
-function debounce(fn) {
-  var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
-
-  var timeoutID = null;
-
-  return function () {
-    clearTimeout(timeoutID);
-
-    var args = arguments;
-    var that = this;
-
-    timeoutID = setTimeout(function () {
-      fn.apply(that, args);
-    }, delay);
-  };
-};
 
 /***/ }),
 /* 11 */
@@ -35967,51 +35967,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 36 */
-/***/ (function(module, exports) {
-
-var taskId = void 0;
-var localValue = void 0;
-
-$(function () {
-
-	//получить подробности задачи
-	$('.task_item').click(function () {
-
-		taskId = $(this).data('id');
-		localValue = localStorage[taskId];
-
-		if (typeof localValue == "undefined") {
-			$.ajax({
-				type: "POST",
-				dataType: 'json',
-				url: '/getTaskOne',
-				data: { taskId: taskId },
-				beforeSend: function beforeSend(xhr, type) {
-					xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-				},
-				success: function success(response) {
-					localStorage[response.data['id']] = JSON.stringify(response.data);
-					renderTask(response.data);
-				}
-			});
-		} else {
-			localValue = JSON.parse(localValue);
-			renderTask(localValue);
-		}
-	});
-});
-
-function renderTask(data) {
-	$('.modal-body').empty();
-	$('#taskModalTitle').text('Task № ' + data['id']);
-	$.each(data, function (key, value) {
-		$('.modal-body').append('<p><strong>' + key + '</strong>: ' + value + '</p>');
-	});
-	$('#taskModal').modal('show');
-}
-
-/***/ }),
+/* 36 */,
 /* 37 */
 /***/ (function(module, exports) {
 
@@ -47249,6 +47205,58 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(20)))
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports) {
+
+var _arguments = arguments,
+    _this = this;
+
+var renderTask = function renderTask(data) {
+	$('.modal-body').empty();
+	$('#taskModalTitle').text('Task № ' + data['id']);
+	$.each(data, function (key, value) {
+		$('.modal-body').append('<p><strong>' + key + '</strong>: ' + value + '</p>');
+	});
+	$('#taskModal').modal('show');
+};
+
+module.exports.taskItem = function (taskId, localValue) {
+	if (typeof localValue == "undefined") {
+		$.ajax({
+			type: "POST",
+			dataType: 'json',
+			url: '/getTaskOne',
+			data: { taskId: taskId },
+			beforeSend: function beforeSend(xhr, type) {
+				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+			},
+			success: function success(response) {
+				localStorage[response.data['id']] = JSON.stringify(response.data);
+				renderTask(response.data);
+			}
+		});
+	} else {
+		localValue = JSON.parse(localValue);
+		renderTask(localValue);
+	}
+};
+
+module.exports.debounce = function (fn) {
+	var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
+
+	var timeoutID = null;
+
+	return function () {
+		clearTimeout(timeoutID);
+		var args = _arguments;
+		var that = _this;
+		timeoutID = setTimeout(function () {
+			fn.apply(that, args);
+		}, delay);
+	};
+};
 
 /***/ })
 /******/ ]);

@@ -9,7 +9,19 @@
 window.Vue = require('vue');
 
 require('./bootstrap');
-require('./taskItem');
+let lib = require('./lib');
+let taskId;
+let localValue;
+let debounce = lib.debounce;
+
+$(function(){
+	//получить подробности задачи
+	$('.task_item').click(function() {
+		taskId = $(this).data('id');
+		localValue = localStorage[taskId];
+		lib.taskItem(taskId, localValue);
+	});
+});
 
 Vue.directive('debounce', (el, binding) => {
 	if (binding.value !== binding.oldValue) {
@@ -45,21 +57,11 @@ new Vue({
     },
     highlight(text) {
 			return text.replace(new RegExp(this.keywords, 'gi'), '<span class="highlighted">$&</span>');
+		},
+		taskItem(id){
+			taskId = id;
+			localValue = localStorage[taskId];
+			lib.taskItem(taskId, localValue);
 		}
-  }
+	}
 });
-
-function debounce(fn, delay = 300) {
-	var timeoutID = null;
-
-    return function () {
-		clearTimeout(timeoutID);
-
-        var args = arguments;
-        var that = this;
-
-        timeoutID = setTimeout(function () {
-        	fn.apply(that, args);
-        }, delay);
-    }
-};

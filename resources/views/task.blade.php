@@ -9,20 +9,16 @@
     <link href="/css/app.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <div class="container">
-      <div class="row justify-content-md-center mt-3 mb-4">
-        <div class="col-md-4 col-xs-12">
-          <div class="form-group" id="app">
-            <input type="text" v-model.lazy="keywords" v-debounce="500" placeholder="Поиск..." class="form-control">
-            <ul v-if="results.length > 0">
-              <li v-for="result in results" :key="result.id" v-html="highlight(result.title)"></li>
-            </ul>
+    <div class="container" id="app">
+      <div class="row">
+        <div class="col-md-9">
+          <div class="row justify-content-md-center mt-3 mb-4">
+           <div class="col-md-4 col-xs-12">
+            <div class="form-group">
+              <input type="text" v-model.lazy="keywords" v-debounce="500" placeholder="Поиск..." class="form-control">
+            </div>
+           </div>
           </div>
-        </div>
-      </div>
-      <div id="list">
-        <div class="row">
-          <div class="col-md-12">
             <table class="table table-hover">
               <thead>
                 <tr>
@@ -41,12 +37,12 @@
                 @endforeach
               </tbody>
             </table>
-          </div>
+          {{ $items->links() }}
         </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{ $items->links() }}
-          </div>
+        <div class="col-md-3 mt-5">
+          <ul v-if="results.length > 0">
+            <li v-for="result in results" :key="result.id" v-html="highlight(result.title)" v-on:click="taskItem(result.id)" class="task_item"></li>
+          </ul>
         </div>
       </div>
     </div>
