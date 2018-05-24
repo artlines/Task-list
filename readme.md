@@ -1,4 +1,4 @@
-Основной код по заданию в файлах:
+Основной код в файлах:
 
 - app/Http/Controllers/TaskController.php;
 - resources/assets/js/app.js;
